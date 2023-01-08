@@ -9,6 +9,11 @@ public class Main {
         FileManager files = new FileManager(inputRootPath());
         files.scanDirectory(files.getRootPath());
         files.findFilesDependencies();
+        if (!files.anyCycles()) {
+            for (TextFile file : files.sortFiles()) {
+                System.out.println(file);
+            }
+        }
     }
 
     // Функция для корректного ввода названия корневой папки

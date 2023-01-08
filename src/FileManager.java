@@ -150,4 +150,28 @@ public class FileManager {
         // Убираем пометку посещения файла
         fromFile.leave();
     }
+
+    // Функция для вызова топологической сортировки для всех файлов
+    public List<TextFile> sortFiles() {
+        for (TextFile file : files) {
+            if (!file.getHasBeenVisited()) {
+                organizeFiles(file);
+            }
+        }
+        return sortedFiles;
+    }
+
+    // Топологическая сортировка файлов
+    private void organizeFiles(TextFile file) {
+        // Отметим файл посещенным
+        file.visit();
+        for (TextFile dependenceFile : file.getDependencies()) {
+            // Посетим все зависимые файлы
+            if (!dependenceFile.getHasBeenVisited()) {
+                organizeFiles(dependenceFile);
+            }
+        }
+        // Закидываем файл на нужное место в списке
+        sortedFiles.add(file);
+    }
 }
