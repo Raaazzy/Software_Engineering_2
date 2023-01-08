@@ -1,7 +1,5 @@
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class FileManager {
 
@@ -14,10 +12,18 @@ public class FileManager {
     // Хранит количество символов в названии корневого файла
     private final int rootPathNameLength;
 
+    // Хранит список файлов, отсортированный с помощью топологической сортировки
+    private final List<TextFile> sortedFiles;
+
+    // Мапа с пронумерованными файлами, используемая для топологической сортировки
+    private final Map<TextFile, Integer> numberedSortFiles;
+
     public FileManager(String rootPathName) {
         rootPath = new File(rootPathName);
         files = new ArrayList<>();
         rootPathNameLength = rootPathName.length() + 1;
+        sortedFiles = new ArrayList<>();
+        numberedSortFiles = new HashMap<>();
     }
 
     // Возвращает корневой файл
@@ -84,5 +90,64 @@ public class FileManager {
             }
         }
         return null;
+    }
+
+    // Проверяет файлы на наличие циклических зависимостей
+    boolean anyCycles() {
+        // Флаг, показывающий наличие циклической зависимости
+        boolean check = false;
+        int serialNumber = 0;
+        // Присваиваем всем файлом порядковый номер
+        for (TextFile file : sortedFiles) {
+            numberedSortFiles.put(file, serialNumber++);
+        }
+        // Ищем циклический зависимости и сразу же их выводим
+        for (TextFile mainFile : numberedSortFiles.keySet()) {
+            for (TextFile dependenceFile : mainFile.getDependencies()) {
+                // Если файл с меньшим порядковым номером имеет зависимость на больший порядковый номер,
+                // то это точно циклическая зависимость
+                if (numberedSortFiles.get(mainFile) < numberedSortFiles.get(dependenceFile)) {
+                    if (!check) {
+                        System.out.println("Обнаруженные циклические зависимости:");
+                        check = true;
+                    }
+                    // Убираем пометки посещенности у всех файлов
+                    cancelAllVisits();
+                    // Выводим найденную циклическую зависимость
+                    printAllFilesInRange(dependenceFile, mainFile, new ArrayList<>(List.of(dependenceFile)));
+                }
+            }
+        }
+        return check;
+    }
+
+    // Отменяет пометку посещенности у всех файлов
+    private void cancelAllVisits() {
+        for (TextFile file : sortedFiles) {
+            file.leave();
+        }
+    }
+
+    // Функция для вывода всех найденных циклических зависимостей
+    private void printAllFilesInRange(TextFile fromFile, TextFile toFile, List<TextFile> localPathList) {
+        // Если дошли до начального файла, то выписываем все файлы пути и прекращаем работу
+        if (fromFile.equals(toFile)) {
+            System.out.println(localPathList);
+            return;
+        }
+        // Помечаем текущий файл посещенным
+        fromFile.visit();
+        // Пробегаемся по всем файлам, зависимым от текущего
+        for (TextFile file : fromFile.getDependencies()) {
+            // Если зависимый файл не был посещен, то рекурсивно вызываем функцию и ищем циклическую зависимость
+            if (!file.getHasBeenVisited()) {
+                localPathList.add(file);
+                printAllFilesInRange(file, toFile, localPathList);
+                // Удаляем этот файл из листа, потому что уже вывели его в консоль
+                localPathList.remove(file);
+            }
+        }
+        // Убираем пометку посещения файла
+        fromFile.leave();
     }
 }

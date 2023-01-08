@@ -77,4 +77,10 @@ public class TextFile {
             System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
         }
     }
+
+    // Переопределенный toString
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
