@@ -64,7 +64,10 @@ public class TextFile {
                             .replace("/", File.separator);
                     if (fileManager.exist(fileName)) {
                         // Добавляем файл в зависимые (если такого файла нет, то добавится null)
-                        dependencies.add(fileManager.find(fileName));
+                        TextFile file = fileManager.find(fileName);
+                        if (!dependencies.contains(file)) {
+                            dependencies.add(file);
+                        }
                     } else {
                         System.out.println("Упс... Файла " + fileName + " не существует. Придется начать все сначала :(");
                         System.exit(0);
