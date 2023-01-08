@@ -16,7 +16,7 @@ public class FileManager {
 
     public FileManager(String rootPathName) {
         rootPath = new File(rootPathName);
-        files = new ArrayList<TextFile>();
+        files = new ArrayList<>();
         rootPathNameLength = rootPathName.length() + 1;
     }
 
@@ -56,5 +56,33 @@ public class FileManager {
         } else {
             return "";
         }
+    }
+
+    // Вызываем функцию для поиска зависимостей у всех найденных файлов
+    public void findFilesDependencies() {
+        for (TextFile file : files) {
+            file.findDependencies(this);
+        }
+    }
+
+    // Показывает: существует ли файл в корневом
+    boolean exist(String fileName) {
+        for (TextFile file : files) {
+            if (Objects.equals(file.getName(), fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Ищет данный файл среди представленных в корневом файле
+    // Если такого файла не существует, то возвращает null
+    TextFile find(String fileName) {
+        for (TextFile file : files) {
+            if (Objects.equals(file.getName(), fileName)) {
+                return file;
+            }
+        }
+        return null;
     }
 }
