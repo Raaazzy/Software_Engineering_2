@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         FileManager files = new FileManager(inputRootPath());
+        files.scanDirectory(files.getRootPath());
     }
 
     // Функция для корректного ввода названия корневой папки
