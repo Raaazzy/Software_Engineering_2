@@ -25,8 +25,8 @@ public class TextFile {
     }
 
     // Возвращает информацию о посещении файла
-    public boolean getHasBeenVisited() {
-        return hasBeenVisited;
+    public boolean hasNotBeenVisited() {
+        return !hasBeenVisited;
     }
 
     // Возвращает все файлы, от которых зависит данный
@@ -70,6 +70,31 @@ public class TextFile {
                     }
                 }
                 line = reader.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+        } catch (IOException e) {
+            System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
+        }
+    }
+
+    // Записывает текст с заданного файла в финальный
+    void writeTextFromFile(File otherFile) {
+        try (FileReader fileReader = new FileReader(file)) {
+            BufferedReader reader = new BufferedReader(fileReader);
+            try (FileWriter writer = new FileWriter(otherFile, true)) {
+                // Считываем файл построчно, пока не дойдем до конца
+                String line = reader.readLine();
+                while (line != null) {
+                    // записываем данные построчно с заданного файла в финальный
+                    writer.append(line)
+                            .append("\n");
+                    line = reader.readLine();
+                }
+            } catch (FileNotFoundException e) {
+                throw new FileNotFoundException();
+            } catch (IOException e) {
+                throw new IOException();
             }
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");

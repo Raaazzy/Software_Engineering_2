@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class FileManager {
@@ -140,7 +143,7 @@ public class FileManager {
         // Пробегаемся по всем файлам, зависимым от текущего
         for (TextFile file : fromFile.getDependencies()) {
             // Если зависимый файл не был посещен, то рекурсивно вызываем функцию и ищем циклическую зависимость
-            if (!file.getHasBeenVisited()) {
+            if (file.hasNotBeenVisited()) {
                 localPathList.add(file);
                 printAllFilesInRange(file, toFile, localPathList);
                 // Удаляем этот файл из листа, потому что уже вывели его в консоль
@@ -154,7 +157,7 @@ public class FileManager {
     // Функция для вызова топологической сортировки для всех файлов
     public List<TextFile> sortFiles() {
         for (TextFile file : files) {
-            if (!file.getHasBeenVisited()) {
+            if (file.hasNotBeenVisited()) {
                 organizeFiles(file);
             }
         }
@@ -167,11 +170,26 @@ public class FileManager {
         file.visit();
         for (TextFile dependenceFile : file.getDependencies()) {
             // Посетим все зависимые файлы
-            if (!dependenceFile.getHasBeenVisited()) {
+            if (dependenceFile.hasNotBeenVisited()) {
                 organizeFiles(dependenceFile);
             }
         }
         // Закидываем файл на нужное место в списке
         sortedFiles.add(file);
+    }
+
+    // Конкатенирует все отсортированные файлы
+    public void concatenateFiles() {
+        File concatenateFile = new File("final.txt");
+        try (FileWriter writer = new FileWriter(concatenateFile, false)) {
+            writer.write("");
+        } catch (FileNotFoundException e) {
+            System.out.println("Упс... Во время считывания файл final.txt куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+        } catch (IOException e) {
+            System.out.println("Упс... С файлом final.txt что-то не так. Придется начать все сначала :(");
+        }
+        for (TextFile file : sortedFiles) {
+            file.writeTextFromFile(concatenateFile);
+        }
     }
 }

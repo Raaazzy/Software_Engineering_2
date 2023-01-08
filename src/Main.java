@@ -13,6 +13,7 @@ public class Main {
             for (TextFile file : files.sortFiles()) {
                 System.out.println(file);
             }
+            files.concatenateFiles();
         }
     }
 
