@@ -73,8 +73,10 @@ public class TextFile {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+            System. exit(0);
         } catch (IOException e) {
             System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
+            System. exit(0);
         }
     }
 
@@ -98,8 +100,10 @@ public class TextFile {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+            System. exit(0);
         } catch (IOException e) {
             System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
+            System. exit(0);
         }
     }
 

@@ -109,7 +109,7 @@ public class FileManager {
             for (TextFile dependenceFile : mainFile.getDependencies()) {
                 // Если файл с меньшим порядковым номером имеет зависимость на больший порядковый номер,
                 // то это точно циклическая зависимость
-                if (numberedSortFiles.get(mainFile) < numberedSortFiles.get(dependenceFile)) {
+                if (numberedSortFiles.get(mainFile) < numberedSortFiles.get(dependenceFile) || Objects.equals(numberedSortFiles.get(mainFile), numberedSortFiles.get(dependenceFile))) {
                     if (!check) {
                         System.out.println("Обнаруженные циклические зависимости:");
                         check = true;
@@ -155,13 +155,21 @@ public class FileManager {
     }
 
     // Функция для вызова топологической сортировки для всех файлов
-    public List<TextFile> sortFiles() {
+    public void sortFiles() {
+        // пробегаемся по всем файлам и вызываем для них сортировку
         for (TextFile file : files) {
             if (file.hasNotBeenVisited()) {
                 organizeFiles(file);
             }
         }
-        return sortedFiles;
+        // Проверяем, есть ли циклические зависимости
+        if (!anyCycles()) {
+            // Если нет, то выводит отсортированные файлы и их конкатенацию
+            for (TextFile file : sortedFiles) {
+                System.out.println(file);
+            }
+            concatenateFiles();
+        }
     }
 
     // Топологическая сортировка файлов
@@ -185,8 +193,10 @@ public class FileManager {
             writer.write("");
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл final.txt куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+            System. exit(0);
         } catch (IOException e) {
             System.out.println("Упс... С файлом final.txt что-то не так. Придется начать все сначала :(");
+            System. exit(0);
         }
         for (TextFile file : sortedFiles) {
             file.writeTextFromFile(concatenateFile);
