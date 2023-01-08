@@ -9,12 +9,7 @@ public class Main {
         FileManager files = new FileManager(inputRootPath());
         files.scanDirectory(files.getRootPath());
         files.findFilesDependencies();
-        if (!files.anyCycles()) {
-            for (TextFile file : files.sortFiles()) {
-                System.out.println(file);
-            }
-            files.concatenateFiles();
-        }
+        files.sortFiles();
     }
 
     // Функция для корректного ввода названия корневой папки
@@ -23,7 +18,7 @@ public class Main {
         while (true) {
             // Считываем введенную строчку
             Scanner in = new Scanner(System.in);
-            String inputString = in.next();
+            String inputString = in.nextLine();
             // В названии корневого пути заменяем все найденные сепараторы на те, что поддерживает операционная система
             Path path = Paths.get(inputString.replace("\\", File.separator)
                     .replace("/", File.separator));
