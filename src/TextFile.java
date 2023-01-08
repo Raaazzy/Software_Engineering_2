@@ -73,13 +73,13 @@ public class TextFile {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         } catch (SecurityException e) {
             System.out.println("Упс... У нас нет доступа к файлу из=за его уровня доступности. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         } catch (IOException e) {
             System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         }
     }
 
@@ -105,13 +105,13 @@ public class TextFile {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         } catch (SecurityException e) {
             System.out.println("Упс... У нас нет доступа к файлу из=за его уровня доступности. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         } catch (IOException e) {
             System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
-            System. exit(0);
+            System.exit(0);
         }
     }
 
