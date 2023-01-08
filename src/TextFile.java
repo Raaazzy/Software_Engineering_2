@@ -66,7 +66,8 @@ public class TextFile {
                         // Добавляем файл в зависимые (если такого файла нет, то добавится null)
                         dependencies.add(fileManager.find(fileName));
                     } else {
-                        throw new FileNotFoundException();
+                        System.out.println("Упс... Файла " + fileName + " не существует. Придется начать все сначала :(");
+                        System.exit(0);
                     }
                 }
                 line = reader.readLine();
@@ -104,13 +105,13 @@ public class TextFile {
                 throw new IOException();
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Упс... Во время считывания файл " + name + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
+            System.out.println("Упс... Во время считывания файл " + name + " или " + otherFile.getName() + " куда-то пропал, и мы не смогли его найти. Придется начать все сначала :(");
             System.exit(0);
         } catch (SecurityException e) {
             System.out.println("Упс... У нас нет доступа к файлу из=за его уровня доступности. Придется начать все сначала :(");
             System.exit(0);
         } catch (IOException e) {
-            System.out.println("Упс... С файлом " + name + " что-то не так. Придется начать все сначала :(");
+            System.out.println("Упс... С файлом " + name + " или " + otherFile.getName() + " что-то не так. Придется начать все сначала :(");
             System.exit(0);
         }
     }
